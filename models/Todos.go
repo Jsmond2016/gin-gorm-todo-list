@@ -3,7 +3,7 @@ package Models
 import (
 	"fmt"
 
-	Config "gin-test/config"
+	Config "gin-gorm-todo-list/config"
 
 	_ "github.com/go-sql-driver/mysql"
 )

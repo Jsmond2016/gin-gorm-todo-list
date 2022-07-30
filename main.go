@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 
-	Config "gin-test/config"
+	Config "gin-gorm-todo-list/config"
 
-	Models "gin-test/models"
-	Routes "gin-test/routes"
+	Models "gin-gorm-todo-list/models"
+	Routes "gin-gorm-todo-list/routes"
 
 	"github.com/jinzhu/gorm"
 )

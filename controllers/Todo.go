@@ -3,7 +3,7 @@ package Controllers
 import (
 	"net/http"
 
-	Models "gin-test/models"
+	Models "gin-gorm-todo-list/models"
 
 	"github.com/gin-gonic/gin"
 )

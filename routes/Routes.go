@@ -1,7 +1,7 @@
 package Routes
 
 import (
-	Controllers "gin-test/controllers"
+	Controllers "gin-gorm-todo-list/controllers"
 
 	"github.com/gin-gonic/gin"
 )

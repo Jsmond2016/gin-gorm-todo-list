@@ -1,0 +1,26 @@
+
+@base=localhost:8080
+
+POST http://{{base}}/v1/todo HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "今日任务",
+	"description": "bbb洗衣、做饭、写代码"
+}
+
+###
+GET http://{{base}}/v1/todo/11 HTTP/1.1
+
+
+###
+GET http://{{base}}/v1/todo HTTP/1.1
+
+###
+PUT http://{{base}}/v1/todo/11 HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "明天任务",
+	"description": "洗衣、做饭、写代码"
+}

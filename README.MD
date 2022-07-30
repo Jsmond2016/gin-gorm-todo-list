@@ -1,18 +1,10 @@
 # Gin Gorm todo 示例
-
+> 本项目参考 https://github.com/ektagarg/gin-gorm-todo-app
 - 主要学习 Gin, Gorm
 
 
-## 安装和本地运行
 
-```bash
-go mod tidy
-
-# go install github.com/silenceper/gowatch@latest
-gowatch
-```
-
-## 数据库启动和配置
+## 启动前：数据库启动和配置
 
 - [Docker 安装 MySql](https://www.runoob.com/docker/docker-install-mysql.html)
 
@@ -22,6 +14,7 @@ docker pull mysql:latest
 # 账号密码可自行修改
 docker run -itd --name mysql-test -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql
 ```
+
 
 - 修改数据库信息
 > 进入 `config/Database.go` 文件修改
@@ -38,7 +31,22 @@ func BuildDBConfig() *DBConfig {
 	return &dbConfig
 }
 ```
+- 使用 [hedisql](https://www.heidisql.com/) 数据库可视化工具打开
+- 创建数据库
 
+```
+CREATE DATABASE gin_todos;
+use gin_todos;
+```
+
+## 安装和本地运行
+
+```bash
+go mod tidy
+
+# go install github.com/silenceper/gowatch@latest
+gowatch
+```
 
 
 ## API list
@@ -49,10 +57,6 @@ func BuildDBConfig() *DBConfig {
 * `PUT` : Update a todo
 * `DELETE` : Delete a todo
 
-## JSON Post Params
-```
-{
-	"name": "明日任务",
-	"description": "洗衣、做饭、写代码"
-}
-```
+## 本地测试
+
+见本地文件 `test.http` 文件，结合 `VS Code` 插件 `REST Client` 食用

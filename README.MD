@@ -2,6 +2,9 @@
 > 本项目参考 https://github.com/CocaineCong/TodoList
 - 主要学习 Gin, Gorm
 
+## 学习进度
+
+- [第P16](https://www.bilibili.com/video/BV1GT4y1R7tX?p=16&spm_id_from=pageDriver&vd_source=97ca2403e645c8e1787c35d7a06f7d45) 完成 task 创建接口
 
 
 ## 启动前：数据库启动和配置

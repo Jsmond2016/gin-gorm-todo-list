@@ -1,0 +1,37 @@
+@base=localhost:3000
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwidXNlcm5hbWUiOiJhbGFuMTIzNDU2IiwiYXV0aG9yaXR5IjowLCJleHAiOjE2NTkzMjQxMjUsImlzcyI6InRvLWRvLWxpc3QifQ.d7dpUk6WwcMlOZn-wAMlCwUdpg2GUJ38XtXUl_tN40g
+
+### 查询所有 tasks
+GET http://{{base}}/api/v1/tasks  HTTP/1.1
+Authorization: {{token}}
+
+### 新建任务
+POST http://{{base}}/api/v1/task  HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "content": "上班摸鱼",
+  "status": 0,
+  "title": "周一任务"
+}
+
+###
+GET http://{{base}}/api/v1/task/1  HTTP/1.1
+Authorization: {{token}}
+
+###
+PUT http://{{base}}/api/v1/task/1  HTTP/1.1
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "id": 1,
+  "content": "上班摸鱼11111",
+  "status": 0,
+  "title": "周一任务"
+}
+
+###
+DELETE http://{{base}}/api/v1/task/4  HTTP/1.1
+Authorization: {{token}}

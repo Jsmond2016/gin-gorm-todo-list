@@ -21,6 +21,9 @@ func NewRouter() *gin.Engine {
 		v1.POST("user/login", api.UserLogin)
 		authed := v1.Group("/")
 		authed.Use(middleware.JWT())
+		{
+			authed.POST("task", api.CreateTask)
+		}
 	}
 	return r
 }

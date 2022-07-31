@@ -5,6 +5,8 @@ import (
 
 	// "github.com/gin-contrib/sessions"
 	// "github.com/gin-contrib/sessions/cookie"
+	"gin-gorm-todo-list/middleware"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,6 +19,8 @@ func NewRouter() *gin.Engine {
 		// 用户操作
 		v1.POST("user/register", api.UserRegister)
 		v1.POST("user/login", api.UserLogin)
+		authed := v1.Group("/")
+		authed.Use(middleware.JWT())
 	}
 	return r
 }

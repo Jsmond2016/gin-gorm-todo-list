@@ -1,30 +1,13 @@
 package main
 
 import (
-	"fmt"
+	"gin-gorm-todo-list/conf"
 
-	Config "gin-gorm-todo-list/config"
-
-	Models "gin-gorm-todo-list/models"
-	Routes "gin-gorm-todo-list/routes"
-
-	"github.com/jinzhu/gorm"
+	"github.com/gin-gonic/gin"
 )
 
-var err error
-
 func main() {
-
-	Config.DB, err = gorm.Open("mysql", Config.DbURL(Config.BuildDBConfig()))
-
-	if err != nil {
-		fmt.Println("statuse: ", err)
-	}
-
-	defer Config.DB.Close()
-	Config.DB.AutoMigrate(&Models.Todo{})
-
-	r := Routes.SetupRouter()
-	// running
-	r.Run()
+	conf.Init()
+	r := gin.Default()
+	r.Run(conf.HttpPort)
 }

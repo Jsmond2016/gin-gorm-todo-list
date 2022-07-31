@@ -1,5 +1,5 @@
 # Gin Gorm todo 示例
-> 本项目参考 https://github.com/ektagarg/gin-gorm-todo-app
+> 本项目参考 https://github.com/CocaineCong/TodoList
 - 主要学习 Gin, Gorm
 
 

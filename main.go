@@ -2,12 +2,11 @@ package main
 
 import (
 	"gin-gorm-todo-list/conf"
-
-	"github.com/gin-gonic/gin"
+	"gin-gorm-todo-list/routes"
 )
 
 func main() {
 	conf.Init()
-	r := gin.Default()
+	r := routes.NewRouter()
 	r.Run(conf.HttpPort)
 }

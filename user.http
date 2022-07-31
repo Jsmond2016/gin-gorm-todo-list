@@ -1,0 +1,25 @@
+@base=localhost:3000
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhbGFuMTIzIiwiYXV0aG9yaXR5IjowLCJleHAiOjE2NTkyNjE2NTgsImlzcyI6InRvLWRvLWxpc3QifQ.Q6iOv3c_W4kZEajn9KMPgOHtvVqvRzIJja-uECPqE_o
+
+
+
+###
+GET http://{{base}}/api/v1/ping HTTP/1.1
+
+### 先清空数据库数据再创建
+POST http://{{base}}/api/v1/user/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "password": "alan123456",
+  "user_name": "alan123456"
+}
+
+###
+POST http://{{base}}/api/v1/user/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "password": "alan123",
+  "user_name": "alan123"
+}

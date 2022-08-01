@@ -26,6 +26,7 @@ func NewRouter() *gin.Engine {
 			authed.POST("task", api.CreateTask)
 			authed.GET("task/:id", api.ShowTask)
 			authed.PUT("task/:id", api.UpdateTask)
+			authed.POST("search", api.SearchTasks)
 		}
 	}
 	return r

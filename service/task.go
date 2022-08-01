@@ -152,24 +152,23 @@ func (service *UpdateTaskService) Update(id string) serializer.Response {
 	}
 }
 
-// func (service *SearchTaskService) Search(uId uint) serializer.Response {
-// 	var tasks []model.Task
-// 	code := e.SUCCESS
-// 	model.DB.Where("uid=?", uId).Preload("User").First(&tasks)
-// 	err := model.DB.Model(&model.Task{}).Where("title LIKE ? OR content LIKE ?",
-// 		"%"+service.Info+"%", "%"+service.Info+"%").Find(&tasks).Error
-// 	if err != nil {
-// 		util.LogrusObj.Info(err)
-// 		code = e.ErrorDatabase
-// 		return serializer.Response{
-// 			Status: code,
-// 			Msg:    e.GetMsg(code),
-// 			Error:  err.Error(),
-// 		}
-// 	}
-// 	return serializer.Response{
-// 		Status: code,
-// 		Msg:    e.GetMsg(code),
-// 		Data:   serializer.BuildTasks(tasks),
-// 	}
-// }
+func (service *SearchTaskService) Search(uId uint) serializer.Response {
+	var tasks []model.Task
+	code := 200
+	model.DB.Where("uid=?", uId).Preload("User").First(&tasks)
+	err := model.DB.Model(&model.Task{}).Where("title LIKE ? OR content LIKE ?",
+		"%"+service.Info+"%", "%"+service.Info+"%").Find(&tasks).Error
+	if err != nil {
+		code = 500
+		return serializer.Response{
+			Status: code,
+			Msg:    "数据库错误",
+			Error:  err.Error(),
+		}
+	}
+	return serializer.Response{
+		Status: code,
+		Msg:    "success",
+		Data:   serializer.BuildTasks(tasks),
+	}
+}

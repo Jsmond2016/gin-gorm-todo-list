@@ -100,34 +100,32 @@ func (service *ShowTaskService) Show(id string) serializer.Response {
 	}
 }
 
-// func (service *DeleteTaskService) Delete(id string) serializer.Response {
-// 	var task model.Task
-// 	code := e.SUCCESS
-// 	err := model.DB.First(&task, id).Error
-// 	if err != nil {
-// 		util.LogrusObj.Info(err)
-// 		code = e.ErrorDatabase
-// 		return serializer.Response{
-// 			Status: code,
-// 			Msg:    e.GetMsg(code),
-// 			Error:  err.Error(),
-// 		}
-// 	}
-// 	err = model.DB.Delete(&task).Error
-// 	if err != nil {
-// 		util.LogrusObj.Info(err)
-// 		code = e.ErrorDatabase
-// 		return serializer.Response{
-// 			Status: code,
-// 			Msg:    e.GetMsg(code),
-// 			Error:  err.Error(),
-// 		}
-// 	}
-// 	return serializer.Response{
-// 		Status: code,
-// 		Msg:    e.GetMsg(code),
-// 	}
-// }
+func (service *DeleteTaskService) Delete(id string) serializer.Response {
+	var task model.Task
+	code := 200
+	err := model.DB.First(&task, id).Error
+	if err != nil {
+		code = 500
+		return serializer.Response{
+			Status: code,
+			Msg:    "数据库操作错误",
+			Error:  err.Error(),
+		}
+	}
+	err = model.DB.Delete(&task).Error
+	if err != nil {
+		code = 400
+		return serializer.Response{
+			Status: code,
+			Msg:    "入参序列化错误",
+			Error:  err.Error(),
+		}
+	}
+	return serializer.Response{
+		Status: code,
+		Msg:    "操作成功",
+	}
+}
 
 func (service *UpdateTaskService) Update(id string) serializer.Response {
 	var task model.Task

@@ -56,3 +56,9 @@ func SearchTasks(c *gin.Context) {
 		c.JSON(400, err)
 	}
 }
+
+func DeleteTask(c *gin.Context) {
+	deleteTaskService := service.DeleteTaskService{}
+	res := deleteTaskService.Delete(c.Param("id"))
+	c.JSON(200, res)
+}

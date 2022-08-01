@@ -79,26 +79,26 @@ func (service *CreateTaskService) Create(id uint) serializer.Response {
 // 	return serializer.BuildListResponse(serializer.BuildTasks(tasks), uint(total))
 // }
 
-// func (service *ShowTaskService) Show(id string) serializer.Response {
-// 	var task model.Task
-// 	code := e.SUCCESS
-// 	err := model.DB.First(&task, id).Error
-// 	if err != nil {
-// 		util.LogrusObj.Info(err)
-// 		code = e.ErrorDatabase
-// 		return serializer.Response{
-// 			Status: code,
-// 			Msg:    e.GetMsg(code),
-// 			Error:  err.Error(),
-// 		}
-// 	}
-// 	task.AddView() //增加点击数
-// 	return serializer.Response{
-// 		Status: code,
-// 		Data:   serializer.BuildTask(task),
-// 		Msg:    e.GetMsg(code),
-// 	}
-// }
+func (service *ShowTaskService) Show(id string) serializer.Response {
+	var task model.Task
+	code := 200
+	err := model.DB.First(&task, id).Error
+	if err != nil {
+		// util.LogrusObj.Info(err)
+		code = 500
+		return serializer.Response{
+			Status: code,
+			Msg:    "数据库操作错误",
+			Error:  err.Error(),
+		}
+	}
+	// task.AddView() //增加点击数
+	return serializer.Response{
+		Status: code,
+		Data:   serializer.BuildTask(task),
+		Msg:    "查看成功",
+	}
+}
 
 // func (service *DeleteTaskService) Delete(id string) serializer.Response {
 // 	var task model.Task

@@ -18,3 +18,9 @@ func CreateTask(c *gin.Context) {
 		// util.LogrusObj.Info(err)
 	}
 }
+
+func ShowTask(c *gin.Context) {
+	showTaskService := service.ShowTaskService{}
+	res := showTaskService.Show(c.Param("id"))
+	c.JSON(200, res)
+}

@@ -35,3 +35,13 @@ func ListTasks(c *gin.Context) {
 		c.JSON(400, err)
 	}
 }
+
+func UpdateTask(c *gin.Context) {
+	updateTaskService := service.UpdateTaskService{}
+	if err := c.ShouldBind(&updateTaskService); err == nil {
+		res := updateTaskService.Update(c.Param("id"))
+		c.JSON(200, res)
+	} else {
+		c.JSON(400, err)
+	}
+}

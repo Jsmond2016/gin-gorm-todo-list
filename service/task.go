@@ -129,29 +129,28 @@ func (service *ShowTaskService) Show(id string) serializer.Response {
 // 	}
 // }
 
-// func (service *UpdateTaskService) Update(id string) serializer.Response {
-// 	var task model.Task
-// 	model.DB.Model(model.Task{}).Where("id = ?", id).First(&task)
-// 	task.Content = service.Content
-// 	task.Status = service.Status
-// 	task.Title = service.Title
-// 	code := e.SUCCESS
-// 	err := model.DB.Save(&task).Error
-// 	if err != nil {
-// 		util.LogrusObj.Info(err)
-// 		code = e.ErrorDatabase
-// 		return serializer.Response{
-// 			Status: code,
-// 			Msg:    e.GetMsg(code),
-// 			Error:  err.Error(),
-// 		}
-// 	}
-// 	return serializer.Response{
-// 		Status: code,
-// 		Msg:    e.GetMsg(code),
-// 		Data:   "修改成功",
-// 	}
-// }
+func (service *UpdateTaskService) Update(id string) serializer.Response {
+	var task model.Task
+	model.DB.Model(model.Task{}).Where("id = ?", id).First(&task)
+	task.Content = service.Content
+	task.Status = service.Status
+	task.Title = service.Title
+	code := 200
+	err := model.DB.Save(&task).Error
+	if err != nil {
+		code = 500
+		return serializer.Response{
+			Status: code,
+			Msg:    "数据库操作错误",
+			Error:  err.Error(),
+		}
+	}
+	return serializer.Response{
+		Status: code,
+		Msg:    "success",
+		Data:   "修改成功",
+	}
+}
 
 // func (service *SearchTaskService) Search(uId uint) serializer.Response {
 // 	var tasks []model.Task

@@ -67,17 +67,17 @@ func (service *CreateTaskService) Create(id uint) serializer.Response {
 	}
 }
 
-// func (service *ListTasksService) List(id uint) serializer.Response {
-// 	var tasks []model.Task
-// 	var total int64
-// 	if service.Limit == 0 {
-// 		service.Limit = 15
-// 	}
-// 	model.DB.Model(model.Task{}).Preload("User").Where("uid = ?", id).Count(&total).
-// 		Limit(service.Limit).Offset((service.Start - 1) * service.Limit).
-// 		Find(&tasks)
-// 	return serializer.BuildListResponse(serializer.BuildTasks(tasks), uint(total))
-// }
+func (service *ListTasksService) List(id uint) serializer.Response {
+	var tasks []model.Task
+	var total int64
+	if service.Limit == 0 {
+		service.Limit = 15
+	}
+	model.DB.Model(model.Task{}).Preload("User").Where("uid = ?", id).Count(&total).
+		Limit(service.Limit).Offset((service.Start - 1) * service.Limit).
+		Find(&tasks)
+	return serializer.BuildListResponse(serializer.BuildTasks(tasks), uint(total))
+}
 
 func (service *ShowTaskService) Show(id string) serializer.Response {
 	var task model.Task

@@ -11,9 +11,9 @@ Content-Type: application/json
 Authorization: {{token}}
 
 {
-  "content": "上班摸鱼",
+  "content": "好好干活",
   "status": 0,
-  "title": "周一任务"
+  "title": "周二任务"
 }
 
 ###

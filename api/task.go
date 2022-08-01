@@ -24,3 +24,14 @@ func ShowTask(c *gin.Context) {
 	res := showTaskService.Show(c.Param("id"))
 	c.JSON(200, res)
 }
+
+func ListTasks(c *gin.Context) {
+	listService := service.ListTasksService{}
+	chaim, _ := util.ParseToken(c.GetHeader("Authorization"))
+	if err := c.ShouldBind(&listService); err == nil {
+		res := listService.List(chaim.Id)
+		c.JSON(200, res)
+	} else {
+		c.JSON(400, err)
+	}
+}

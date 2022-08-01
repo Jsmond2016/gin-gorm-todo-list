@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"gin-gorm-todo-list/pkg/e"
 	util "gin-gorm-todo-list/pkg/utils"
 	"time"
 
@@ -19,15 +20,15 @@ func JWT() gin.HandlerFunc {
 		} else {
 			claims, err := util.ParseToken(token)
 			if err != nil {
-				code = 403 // 无权限
+				code = e.ErrorAuthCheckTokenFail
 			} else if time.Now().Unix() > claims.ExpiresAt {
-				code = 401 // 权限过期
+				code = e.ErrorAuthCheckTokenTimeout
 			}
 		}
-		if code != 200 {
+		if code != e.SUCCESS {
 			c.JSON(400, gin.H{
 				"status": code,
-				"msg":    "token 解析错误",
+				"msg":    e.GetMsg(code),
 				"data":   data,
 			})
 			c.Abort()

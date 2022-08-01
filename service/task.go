@@ -2,6 +2,8 @@ package service
 
 import (
 	"gin-gorm-todo-list/model"
+	"gin-gorm-todo-list/pkg/e"
+	util "gin-gorm-todo-list/pkg/utils"
 	"gin-gorm-todo-list/serializer"
 	"time"
 )
@@ -50,20 +52,21 @@ func (service *CreateTaskService) Create(id uint) serializer.Response {
 		Status:    0,
 		StartTime: time.Now().Unix(),
 	}
-	code := 200
+	code := e.SUCCESS
 	err := model.DB.Create(&task).Error
 	if err != nil {
-		code = 500
+		util.LogrusObj.Info(err)
+		code = e.ErrorDatabase
 		return serializer.Response{
 			Status: code,
-			Msg:    "数据库错误",
+			Msg:    e.GetMsg(code),
 			Error:  err.Error(),
 		}
 	}
 	return serializer.Response{
 		Status: code,
 		Data:   serializer.BuildTask(task),
-		Msg:    "创建成功！",
+		Msg:    e.GetMsg(code),
 	}
 }
 
@@ -81,49 +84,51 @@ func (service *ListTasksService) List(id uint) serializer.Response {
 
 func (service *ShowTaskService) Show(id string) serializer.Response {
 	var task model.Task
-	code := 200
+	code := e.SUCCESS
 	err := model.DB.First(&task, id).Error
 	if err != nil {
-		// util.LogrusObj.Info(err)
-		code = 500
+		util.LogrusObj.Info(err)
+		code = e.ErrorDatabase
 		return serializer.Response{
 			Status: code,
-			Msg:    "数据库操作错误",
+			Msg:    e.GetMsg(code),
 			Error:  err.Error(),
 		}
 	}
-	// task.AddView() //增加点击数
+	task.AddView() //增加点击数
 	return serializer.Response{
 		Status: code,
 		Data:   serializer.BuildTask(task),
-		Msg:    "查看成功",
+		Msg:    e.GetMsg(code),
 	}
 }
 
 func (service *DeleteTaskService) Delete(id string) serializer.Response {
 	var task model.Task
-	code := 200
+	code := e.SUCCESS
 	err := model.DB.First(&task, id).Error
 	if err != nil {
-		code = 500
+		util.LogrusObj.Info(err)
+		code = e.ErrorDatabase
 		return serializer.Response{
 			Status: code,
-			Msg:    "数据库操作错误",
+			Msg:    e.GetMsg(code),
 			Error:  err.Error(),
 		}
 	}
 	err = model.DB.Delete(&task).Error
 	if err != nil {
-		code = 400
+		util.LogrusObj.Info(err)
+		code = e.ErrorDatabase
 		return serializer.Response{
 			Status: code,
-			Msg:    "入参序列化错误",
+			Msg:    e.GetMsg(code),
 			Error:  err.Error(),
 		}
 	}
 	return serializer.Response{
 		Status: code,
-		Msg:    "操作成功",
+		Msg:    e.GetMsg(code),
 	}
 }
 
@@ -133,40 +138,42 @@ func (service *UpdateTaskService) Update(id string) serializer.Response {
 	task.Content = service.Content
 	task.Status = service.Status
 	task.Title = service.Title
-	code := 200
+	code := e.SUCCESS
 	err := model.DB.Save(&task).Error
 	if err != nil {
-		code = 500
+		util.LogrusObj.Info(err)
+		code = e.ErrorDatabase
 		return serializer.Response{
 			Status: code,
-			Msg:    "数据库操作错误",
+			Msg:    e.GetMsg(code),
 			Error:  err.Error(),
 		}
 	}
 	return serializer.Response{
 		Status: code,
-		Msg:    "success",
+		Msg:    e.GetMsg(code),
 		Data:   "修改成功",
 	}
 }
 
 func (service *SearchTaskService) Search(uId uint) serializer.Response {
 	var tasks []model.Task
-	code := 200
+	code := e.SUCCESS
 	model.DB.Where("uid=?", uId).Preload("User").First(&tasks)
 	err := model.DB.Model(&model.Task{}).Where("title LIKE ? OR content LIKE ?",
 		"%"+service.Info+"%", "%"+service.Info+"%").Find(&tasks).Error
 	if err != nil {
-		code = 500
+		util.LogrusObj.Info(err)
+		code = e.ErrorDatabase
 		return serializer.Response{
 			Status: code,
-			Msg:    "数据库错误",
+			Msg:    e.GetMsg(code),
 			Error:  err.Error(),
 		}
 	}
 	return serializer.Response{
 		Status: code,
-		Msg:    "success",
+		Msg:    e.GetMsg(code),
 		Data:   serializer.BuildTasks(tasks),
 	}
 }

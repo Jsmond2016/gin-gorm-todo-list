@@ -12,7 +12,6 @@ import (
 
 var DB *gorm.DB
 
-// https://gorm.io/zh_CN/docs/connecting_to_the_database.html
 func Database(conn string) {
 	var ormLogger logger.Interface
 	if gin.Mode() == "debug" {

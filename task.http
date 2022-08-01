@@ -1,5 +1,5 @@
 @base=localhost:3000
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGFuMTIzNDU2IiwiYXV0aG9yaXR5IjowLCJleHAiOjE2NTk0MjYyNzIsImlzcyI6InRvLWRvLWxpc3QifQ.sFjAQqO0a7qtlfGL_jL3qd-Nq5b8G-SO2HrdNayPmuc
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhbGFuMTIzNDU2IiwiYXV0aG9yaXR5IjowLCJleHAiOjE2NTk0MzAxMzAsImlzcyI6InRvLWRvLWxpc3QifQ.YtFsYLwGbtO9ZheKMEugqvIDaqYOFGriP5JNW2SJZSE
 
 ### 查询所有 tasks
 GET http://{{base}}/api/v1/tasks  HTTP/1.1
@@ -17,7 +17,7 @@ Authorization: {{token}}
 }
 
 ###
-GET http://{{base}}/api/v1/task/1  HTTP/1.1
+GET http://{{base}}/api/v1/task/6  HTTP/1.1
 Authorization: {{token}}
 
 ### 模糊查询
@@ -30,7 +30,7 @@ Content-Type: application/json
 }
 
 ###
-PUT http://{{base}}/api/v1/task/1  HTTP/1.1
+PUT http://{{base}}/api/v1/task/6  HTTP/1.1
 Authorization: {{token}}
 Content-Type: application/json
 
@@ -42,5 +42,5 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://{{base}}/api/v1/task/4  HTTP/1.1
+DELETE http://{{base}}/api/v1/task/6  HTTP/1.1
 Authorization: {{token}}

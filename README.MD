@@ -2,11 +2,27 @@
 > 本项目参考 https://github.com/CocaineCong/TodoList
 - 主要学习 Gin, Gorm, MySql, Redis 操作
 
+## 项目介绍
 
+- 用户注册登录 ( jwt-go 鉴权 )
+- 新增/删除/修改/查询 备忘录
+- 存储每条备忘录的浏览次数
+- 分页功能
+## 项目依赖
+
+- Gin
+- Gorm
+- mysql
+- redis
+- ini
+- jwt-go
+- logrus
+- go-swagger
 
 ## 启动前配置
 
 ### 配置文件
+> 在目录 `conf` 新建配置文件 `config.ini` 并填写以下内容：
 
 ```ini
 # debug开发模式,release生产模式
@@ -96,4 +112,11 @@ POST   /api/v1/search
 见本地文件 `test.http` 文件，结合 `VS Code` 插件 `REST Client` 食用
 
 
-        
+## 项目参考资料
+
+- [CocaineCong/TodoList](https://github.com/CocaineCong/TodoList)
+- [gin-doc](https://gin-gonic.com/zh-cn/docs/)
+- [gorm](https://gorm.io/zh_CN/)
+- [swaggo/gin-swagger](https://github.com/swaggo/gin-swagger)
+- [Golang gin框架使用swagger生成接囗文档](https://blog.csdn.net/ling1998/article/details/124205500)
+- [视频教程-Gin+Gorm实现简单备忘录](https://www.bilibili.com/video/BV1GT4y1R7tX)

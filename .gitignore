@@ -1,1 +1,3 @@
 *.exe
+logs
+conf/config.ini

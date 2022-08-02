@@ -5,6 +5,8 @@ import (
 
 	"gin-gorm-todo-list/middleware"
 
+	_ "gin-gorm-todo-list/docs"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"

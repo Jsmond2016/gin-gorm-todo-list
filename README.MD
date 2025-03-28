@@ -1,6 +1,8 @@
 # Gin Gorm todo 示例
 > 本项目参考 https://github.com/CocaineCong/TodoList
+
 - 主要学习 Gin, Gorm, MySql, Redis 操作
+- 注意： 最新版本在分支 v2
 
 ## 项目介绍
 
@@ -98,13 +100,14 @@ gowatch
 ```
 GET    /api/v1/ping           
 POST   /api/v1/user/register  
-POST   /api/v1/user/login     
-GET    /api/v1/tasks          
-POST   /api/v1/task           
-GET    /api/v1/task/:id       
-DELETE /api/v1/task/:id       
-PUT    /api/v1/task/:id       
-POST   /api/v1/search 
+POST   /api/v1/user/login  
+
+GET    /api/v1/task_list          
+POST   /api/v1/task_create           
+GET    /api/v1/task/task_show  
+POST /api/v1/task/task_delete  
+POST    /api/v1/task/task_update      
+POST   /api/v1/task/task_search
 ```
 
 ## 本地测试

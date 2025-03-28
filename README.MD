@@ -127,3 +127,8 @@ POST   /api/v1/task/task_search
 - [swaggo/gin-swagger](https://github.com/swaggo/gin-swagger)
 - [Golang gin框架使用swagger生成接囗文档](https://blog.csdn.net/ling1998/article/details/124205500)
 - [视频教程-Gin+Gorm实现简单备忘录](https://www.bilibili.com/video/BV1GT4y1R7tX)
+
+## 工具推荐
+
+- https://github.com/CocaineCong/fgen 基于 gorm 根据数据库自动生成 curd 模版，注意一下使用方式是执行里面的 `TestGenProject` 测试用例
+

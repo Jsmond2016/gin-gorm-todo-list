@@ -1,3 +1,4 @@
+basePath: /api/v1
 definitions:
   serializer.Response:
     properties:
@@ -25,7 +26,6 @@ definitions:
       data:
         $ref: '#/definitions/serializer.User'
       error:
-        example: ""
         type: string
       msg:
         example: ok
@@ -72,6 +72,9 @@ definitions:
         description: 用户ID
         example: 1
         type: integer
+      status:
+        description: 用户状态
+        type: string
       user_name:
         description: 用户名
         example: FanOne
@@ -80,14 +83,11 @@ definitions:
   service.CreateTaskService:
     properties:
       content:
-        maxLength: 1000
         type: string
       status:
         description: 0 待办   1已完成
         type: integer
       title:
-        maxLength: 100
-        minLength: 2
         type: string
     required:
     - title
@@ -107,13 +107,9 @@ definitions:
     properties:
       password:
         example: FanOne666
-        maxLength: 16
-        minLength: 5
         type: string
       user_name:
         example: FanOne
-        maxLength: 15
-        minLength: 3
         type: string
     required:
     - password
@@ -121,6 +117,9 @@ definitions:
     type: object
 info:
   contact: {}
+  description: This is a sample Server pets
+  title: ToDoList API
+  version: 0.0.1
 paths:
   /search:
     post:
@@ -145,6 +144,8 @@ paths:
           schema:
             type: json
       summary: 查询任务
+      tags:
+      - TASK
   /task:
     post:
       consumes:
@@ -168,6 +169,8 @@ paths:
           schema:
             type: json
       summary: 创建任务
+      tags:
+      - TASK
     put:
       consumes:
       - application/json
@@ -190,6 +193,8 @@ paths:
           schema:
             type: json
       summary: 修改任务
+      tags:
+      - TASK
   /task/:id:
     delete:
       consumes:
@@ -213,6 +218,8 @@ paths:
           schema:
             type: json
       summary: 删除任务
+      tags:
+      - TASK
     get:
       consumes:
       - application/json
@@ -235,6 +242,8 @@ paths:
           schema:
             type: json
       summary: 展示任务详细信息
+      tags:
+      - TASK
   /tasks:
     get:
       consumes:
@@ -258,6 +267,8 @@ paths:
           schema:
             type: json
       summary: 获取任务列表
+      tags:
+      - TASK
   /user/login:
     post:
       consumes:
@@ -281,6 +292,8 @@ paths:
           schema:
             $ref: '#/definitions/serializer.ResponseUser'
       summary: 用户登录
+      tags:
+      - USER
   /user/register:
     post:
       consumes:
@@ -304,4 +317,6 @@ paths:
           schema:
             $ref: '#/definitions/serializer.ResponseUser'
       summary: 用户注册
+      tags:
+      - USER
 swagger: "2.0"

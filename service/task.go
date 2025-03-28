@@ -1,179 +1,162 @@
 package service
 
 import (
-	"gin-gorm-todo-list/model"
-	"gin-gorm-todo-list/pkg/e"
-	util "gin-gorm-todo-list/pkg/utils"
-	"gin-gorm-todo-list/serializer"
+	"context"
+	"sync"
 	"time"
+
+	"gin-gorm-todo-list/pkg/ctl"
+	"gin-gorm-todo-list/pkg/util"
+	"gin-gorm-todo-list/repository/db/dao"
+	"gin-gorm-todo-list/repository/db/model"
+	"gin-gorm-todo-list/types"
 )
 
-//展示任务详情的服务
-type ShowTaskService struct {
+var TaskSrvIns *TaskSrv
+var TaskSrvOnce sync.Once
+
+type TaskSrv struct {
 }
 
-//删除任务的服务
-type DeleteTaskService struct {
+func GetTaskSrv() *TaskSrv {
+	TaskSrvOnce.Do(func() {
+		TaskSrvIns = &TaskSrv{}
+	})
+	return TaskSrvIns
 }
 
-//更新任务的服务
-type UpdateTaskService struct {
-	ID      uint   `form:"id" json:"id"`
-	Title   string `form:"title" json:"title" binding:"required,min=2,max=100"`
-	Content string `form:"content" json:"content" binding:"max=1000"`
-	Status  int    `form:"status" json:"status"` //0 待办   1已完成
-}
-
-//创建任务的服务
-type CreateTaskService struct {
-	Title   string `form:"title" json:"title" binding:"required,min=2,max=100"`
-	Content string `form:"content" json:"content" binding:"max=1000"`
-	Status  int    `form:"status" json:"status"` //0 待办   1已完成
-}
-
-//搜索任务的服务
-type SearchTaskService struct {
-	Info string `form:"info" json:"info"`
-}
-
-type ListTasksService struct {
-	Limit int `form:"limit" json:"limit"`
-	Start int `form:"start" json:"start"`
-}
-
-func (service *CreateTaskService) Create(id uint) serializer.Response {
-	var user model.User
-	model.DB.First(&user, id)
-	task := model.Task{
-		User:      user,
+func (s *TaskSrv) CreateTask(ctx context.Context, req *types.CreateTaskReq) (resp interface{}, err error) {
+	u, err := ctl.GetUserInfo(ctx)
+	if err != nil {
+		util.LogrusObj.Info(err)
+		return
+	}
+	user, err := dao.NewUserDao(ctx).FindUserByUserId(u.Id)
+	if err != nil {
+		util.LogrusObj.Info(err)
+		return
+	}
+	task := &model.Task{
+		User:      *user,
 		Uid:       user.ID,
-		Title:     service.Title,
-		Content:   service.Content,
+		Title:     req.Title,
+		Content:   req.Content,
 		Status:    0,
 		StartTime: time.Now().Unix(),
 	}
-	code := e.SUCCESS
-	err := model.DB.Create(&task).Error
+	err = dao.NewTaskDao(ctx).CreateTask(task)
 	if err != nil {
 		util.LogrusObj.Info(err)
-		code = e.ErrorDatabase
-		return serializer.Response{
-			Status: code,
-			Msg:    e.GetMsg(code),
-			Error:  err.Error(),
-		}
+		return
 	}
-	return serializer.Response{
-		Status: code,
-		Data:   serializer.BuildTask(task),
-		Msg:    e.GetMsg(code),
-	}
+	return ctl.RespSuccess(), nil
 }
 
-func (service *ListTasksService) List(id uint) serializer.Response {
-	var tasks []model.Task
-	var total int64
-	if service.Limit == 0 {
-		service.Limit = 15
+func (s *TaskSrv) ListTask(ctx context.Context, req *types.ListTasksReq) (resp interface{}, err error) {
+	u, err := ctl.GetUserInfo(ctx)
+	if err != nil {
+		util.LogrusObj.Info(err)
+		return
 	}
-	model.DB.Model(model.Task{}).Preload("User").Where("uid = ?", id).Count(&total).
-		Limit(service.Limit).Offset((service.Start - 1) * service.Limit).
-		Find(&tasks)
-	return serializer.BuildListResponse(serializer.BuildTasks(tasks), uint(total))
+	tasks, total, err := dao.NewTaskDao(ctx).ListTask(req.Start, req.Limit, u.Id)
+	if err != nil {
+		util.LogrusObj.Info(err)
+		return
+	}
+	taskRespList := make([]*types.TaskResp, 0)
+	for _, v := range tasks {
+		taskRespList = append(taskRespList, &types.TaskResp{
+			ID:        v.ID,
+			Title:     v.Title,
+			Content:   v.Content,
+			View:      v.View(),
+			Status:    v.Status,
+			CreatedAt: v.CreatedAt.Unix(),
+			StartTime: v.StartTime,
+			EndTime:   v.EndTime,
+		})
+	}
+	return ctl.RespList(taskRespList, total), nil
 }
 
-func (service *ShowTaskService) Show(id string) serializer.Response {
-	var task model.Task
-	code := e.SUCCESS
-	err := model.DB.First(&task, id).Error
+// ShowTask 展示Task作用
+func (s *TaskSrv) ShowTask(ctx context.Context, req *types.ShowTaskReq) (resp interface{}, err error) {
+	u, err := ctl.GetUserInfo(ctx)
 	if err != nil {
 		util.LogrusObj.Info(err)
-		code = e.ErrorDatabase
-		return serializer.Response{
-			Status: code,
-			Msg:    e.GetMsg(code),
-			Error:  err.Error(),
-		}
+		return
 	}
-	task.AddView() //增加点击数
-	return serializer.Response{
-		Status: code,
-		Data:   serializer.BuildTask(task),
-		Msg:    e.GetMsg(code),
+	task, err := dao.NewTaskDao(ctx).FindTaskByIdAndUserId(u.Id, req.Id)
+	if err != nil {
+		util.LogrusObj.Info(err)
+		return
 	}
+	respTask := &types.TaskResp{
+		ID:        task.ID,
+		Title:     task.Title,
+		Content:   task.Content,
+		View:      task.View(),
+		Status:    task.Status,
+		CreatedAt: task.CreatedAt.Unix(),
+		StartTime: task.StartTime,
+		EndTime:   task.EndTime,
+	}
+	task.AddView() // 增加点击数
+	return ctl.RespSuccessWithData(respTask), nil
 }
 
-func (service *DeleteTaskService) Delete(id string) serializer.Response {
-	var task model.Task
-	code := e.SUCCESS
-	err := model.DB.First(&task, id).Error
+func (s *TaskSrv) DeleteTask(ctx context.Context, req *types.DeleteTaskReq) (resp interface{}, err error) {
+	u, err := ctl.GetUserInfo(ctx)
 	if err != nil {
 		util.LogrusObj.Info(err)
-		code = e.ErrorDatabase
-		return serializer.Response{
-			Status: code,
-			Msg:    e.GetMsg(code),
-			Error:  err.Error(),
-		}
+		return
 	}
-	err = model.DB.Delete(&task).Error
+	err = dao.NewTaskDao(ctx).DeleteTaskById(u.Id, req.Id)
 	if err != nil {
 		util.LogrusObj.Info(err)
-		code = e.ErrorDatabase
-		return serializer.Response{
-			Status: code,
-			Msg:    e.GetMsg(code),
-			Error:  err.Error(),
-		}
+		return
 	}
-	return serializer.Response{
-		Status: code,
-		Msg:    e.GetMsg(code),
-	}
+
+	return ctl.RespSuccess(), nil
 }
 
-func (service *UpdateTaskService) Update(id string) serializer.Response {
-	var task model.Task
-	model.DB.Model(model.Task{}).Where("id = ?", id).First(&task)
-	task.Content = service.Content
-	task.Status = service.Status
-	task.Title = service.Title
-	code := e.SUCCESS
-	err := model.DB.Save(&task).Error
+func (s *TaskSrv) UpdateTask(ctx context.Context, req *types.UpdateTaskReq) (resp interface{}, err error) {
+	u, err := ctl.GetUserInfo(ctx)
 	if err != nil {
 		util.LogrusObj.Info(err)
-		code = e.ErrorDatabase
-		return serializer.Response{
-			Status: code,
-			Msg:    e.GetMsg(code),
-			Error:  err.Error(),
-		}
+		return
 	}
-	return serializer.Response{
-		Status: code,
-		Msg:    e.GetMsg(code),
-		Data:   "修改成功",
+	err = dao.NewTaskDao(ctx).UpdateTask(u.Id, req)
+	if err != nil {
+		util.LogrusObj.Info(err)
+		return
 	}
+	return ctl.RespSuccess(), nil
 }
 
-func (service *SearchTaskService) Search(uId uint) serializer.Response {
-	var tasks []model.Task
-	code := e.SUCCESS
-	model.DB.Where("uid=?", uId).Preload("User").First(&tasks)
-	err := model.DB.Model(&model.Task{}).Where("title LIKE ? OR content LIKE ?",
-		"%"+service.Info+"%", "%"+service.Info+"%").Find(&tasks).Error
+func (s *TaskSrv) SearchTask(ctx context.Context, req *types.SearchTaskReq) (resp interface{}, err error) {
+	u, err := ctl.GetUserInfo(ctx)
 	if err != nil {
 		util.LogrusObj.Info(err)
-		code = e.ErrorDatabase
-		return serializer.Response{
-			Status: code,
-			Msg:    e.GetMsg(code),
-			Error:  err.Error(),
-		}
+		return
 	}
-	return serializer.Response{
-		Status: code,
-		Msg:    e.GetMsg(code),
-		Data:   serializer.BuildTasks(tasks),
+	tasks, err := dao.NewTaskDao(ctx).SearchTask(u.Id, req.Info)
+	if err != nil {
+		util.LogrusObj.Info(err)
+		return
 	}
+	taskRespList := make([]*types.TaskResp, 0)
+	for _, v := range tasks {
+		taskRespList = append(taskRespList, &types.TaskResp{
+			ID:        v.ID,
+			Title:     v.Title,
+			Content:   v.Content,
+			Status:    v.Status,
+			View:      v.View(),
+			CreatedAt: v.CreatedAt.Unix(),
+			StartTime: v.StartTime,
+			EndTime:   v.EndTime,
+		})
+	}
+	return ctl.RespList(taskRespList, int64(len(taskRespList))), nil
 }

@@ -1,5 +1,7 @@
 @base=localhost:3000
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhbGFuMTIzNDU2IiwiYXV0aG9yaXR5IjowLCJleHAiOjE2NTk0MzAxMzAsImlzcyI6InRvLWRvLWxpc3QifQ.YtFsYLwGbtO9ZheKMEugqvIDaqYOFGriP5JNW2SJZSE
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGFuMTIzNDU2IiwiYXV0aG9yaXR5IjowLCJleHAiOjE3NDMyNTA3NjYsImlzcyI6InRvLWRvLWxpc3QifQ.iVMpNJkGg59_icrywoYlZboTaid31T4rGddcXsCvSxY
+
+
 ###
 GET http://{{base}}/api/v1/ping HTTP/1.1
 

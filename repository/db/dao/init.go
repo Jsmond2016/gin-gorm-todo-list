@@ -1,6 +1,8 @@
-package model
+package dao
 
 import (
+	"context"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -8,11 +10,14 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+
+	conf "gin-gorm-todo-list/config"
 )
 
-var DB *gorm.DB
+var _db *gorm.DB
 
-func Database(conn string) {
+func MySQLInit() {
+	conn := strings.Join([]string{conf.DbUser, ":", conf.DbPassWord, "@tcp(", conf.DbHost, ":", conf.DbPort, ")/", conf.DbName, "?charset=utf8&parseTime=true"}, "")
 	var ormLogger logger.Interface
 	if gin.Mode() == "debug" {
 		ormLogger = logger.Default.LogMode(logger.Info)
@@ -36,9 +41,34 @@ func Database(conn string) {
 		panic(err)
 	}
 	sqlDB, _ := db.DB()
-	sqlDB.SetMaxIdleConns(20)  //设置连接池，空闲
-	sqlDB.SetMaxOpenConns(100) //打开
+	sqlDB.SetMaxIdleConns(20)  // 设置连接池，空闲
+	sqlDB.SetMaxOpenConns(100) // 打开
 	sqlDB.SetConnMaxLifetime(time.Second * 30)
+	_db = db
+	migration()
+}
+
+func NewDBClient(ctx context.Context) *gorm.DB {
+	db := _db
+	return db.WithContext(ctx)
+}
+
+/*
+gorm:v1
+func Database(connString string) {
+	db, err := gorm.Open("mysql", connString)
+	db.LogMode(true)
+	if err != nil {
+		panic(err)
+	}
+	if gin.Mode() == "release" {
+		db.LogMode(false)
+	}
+	db.SingularTable(true)   //默认不加复数s
+	db.DB().SetMaxIdleConns(20)  //设置连接池，空闲
+	db.DB().SetMaxOpenConns(100) //打开
+	db.DB().SetConnMaxLifetime(time.Second * 30)
 	DB = db
 	migration()
 }
+*/

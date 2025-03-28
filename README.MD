@@ -2,7 +2,11 @@
 > 本项目参考 https://github.com/CocaineCong/TodoList
 
 - 主要学习 Gin, Gorm, MySql, Redis 操作
-- 注意： 最新版本在分支 v2
+- 注意： 分支版本依次为：
+  - v0: 初始版本
+  - v1: 修改版本
+  - v2: 最新版本
+  - main: 同 v2, 最新版本
 
 ## 项目介绍
 

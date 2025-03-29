@@ -24,4 +24,4 @@ DbUser = root
 # mysql 密码
 DbPassWord = 123456
 # mysql 名字
-DbName = gin_todos
+DbName = todolist

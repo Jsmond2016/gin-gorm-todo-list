@@ -1,3 +1,5 @@
 *.exe
 logs
 config/config.ini
+node_modules
+dist

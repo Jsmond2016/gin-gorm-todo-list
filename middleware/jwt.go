@@ -16,7 +16,9 @@ func JWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var code int
 		code = e.SUCCESS
-		token := c.GetHeader("Authorization")
+		tokenHeader := c.GetHeader("Authorization")
+		// token = Bearer token
+		token := tokenHeader[len("Bearer "):]
 		if token == "" {
 			code = http.StatusNotFound
 			c.JSON(e.InvalidParams, gin.H{

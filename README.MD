@@ -6,9 +6,14 @@
   - v0: 初始版本
   - v1: 修改版本
   - v2: 最新版本
+  - v3: 增加前端页面
   - main: 同 v2, 最新版本
 
 ## 项目介绍
+
+![](https://github.com/Jsmond2016/picx-images-hosting/raw/master/image.2dovazxlxt.webp)
+![](https://github.com/Jsmond2016/picx-images-hosting/raw/master/image.4qrhs7a0ws.webp)
+
 
 - 用户注册登录 ( jwt-go 鉴权 )
 - 新增/删除/修改/查询 备忘录

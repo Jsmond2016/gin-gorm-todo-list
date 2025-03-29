@@ -11,35 +11,15 @@ import TaskDetail from "@pages/TaskDetail";
 import Login from "@pages/Login";
 import Register from "@pages/Register";
 import Layout from "@components/Layout";
-import { useLocalStorageState, useMount } from "ahooks";
-import { useState } from "react";
 
 function App() {
-  const [token, setToken] = useState("");
-
-  useMount(() => {
-    const token = localStorage.getItem("token");
-    setToken(token || "");
-  });
-  if (!token) {
-    return (
-      <ConfigProvider locale={zhCN}>
-        <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </Routes>
-        </Router>
-      </ConfigProvider>
-    );
-  }
-
   return (
     <ConfigProvider locale={zhCN}>
       <Router>
         <Routes>
           <Route element={<Layout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/tasks" element={<TaskList />} />
             <Route path="/task/:id" element={<TaskDetail />} />
             <Route path="*" element={<Navigate to="/tasks" replace />} />

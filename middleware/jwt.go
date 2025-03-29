@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"net/http"
+	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -17,10 +17,23 @@ func JWT() gin.HandlerFunc {
 		var code int
 		code = e.SUCCESS
 		tokenHeader := c.GetHeader("Authorization")
+
+		if tokenHeader == "" {
+			code = e.ErrorAuthCheckTokenFail
+			c.JSON(e.InvalidParams, gin.H{
+				"status": code,
+				"msg":    e.GetMsg(code),
+				"data":   "缺少Token",
+			})
+			c.Abort()
+			return
+		}
 		// token = Bearer token
 		token := tokenHeader[len("Bearer "):]
+		// log token
+		fmt.Println("token ==>>>>", token)
 		if token == "" {
-			code = http.StatusNotFound
+			code = e.ErrorAuthCheckTokenFail
 			c.JSON(e.InvalidParams, gin.H{
 				"status": code,
 				"msg":    e.GetMsg(code),
